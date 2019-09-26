@@ -1,5 +1,5 @@
 ARG arch=x86_64
-FROM multiarch/alpine:${arch}-v3.9
+FROM multiarch/alpine:${arch}-v3.10
 
 RUN apk add --no-cache bash shadow vsftpd && \
     rm /etc/vsftpd/vsftpd.conf;
