@@ -1,0 +1,33 @@
+name: build
+run-name: ${{ github.actor }} is building a container image for vsftpd
+on: [push]
+jobs:
+  build-container-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install qemu dependency
+        run: sudo apt-get update && sudo apt-get install -y qemu-user-static
+      - name: Buildah container
+        id: build
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: vsftpd
+          tags: latest
+          containerfiles: |
+            ./Containerfile
+          build-args: |
+            ALPINE_VERSION=3.19
+          archs: amd64, arm, arm64
+      - name: Check images created
+        run: buildah images | grep '${{ env.IMAGE_NAME }}'
+      - name: Push To ghcr.io/
+        id: push-to-ghcr
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build.outputs.image }}
+          tags: ${{ steps.build.outputs.tags }}
+          registry: ghcr.io/${{ github.repository_owner }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}

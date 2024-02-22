@@ -174,12 +174,13 @@ fi
 echo -e "${FTP_PASSWORD}\n${FTP_PASSWORD}" | passwd "${FTP_USER}"
 
 echo -e "
-#################################################
-#                                               #
-#    Docker image: eddyhub/docker-vsftpd        #
-#    https://github.com/eddyhub/docker-vsftpd   #
-#                                               #
-#################################################
+#####################################################
+#                                                   #
+#    Container image: eddyhub/container-vsftpd      #
+#    https://github.com/eddyhub/container-vsftpd    #
+#    https://gitlab.com/eddyhub/container-vsftpd    #
+#                                                   #
+#####################################################
 
 Server settings:
 ================
@@ -187,7 +188,7 @@ Server settings:
 - FTP password: ${FTP_PASSWORD}
 - FTP user home dir: ${FTP_USER_HOME}
 "
-#ln -sf /dev/stdout "${CONFIGURATION[vsftpd_log_file]}"
+
 touch "${CONFIGURATION[vsftpd_log_file]}"
 tail -f "${CONFIGURATION[vsftpd_log_file]}" &
 vsftpd $CONFIG_FILE_PATH

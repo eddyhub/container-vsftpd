@@ -1,15 +1,13 @@
-image: docker:latest
+image: quay.io/buildah/stable:v1.34.0
 
-services:
-  - docker:dind
 stages:
   - build_and_deploy
+
 job:
   stage: build_and_deploy
   script:
-    - mkdir ~/.docker
-    - echo '{"experimental":"enabled"}' | tee ~/.docker/config.json
-    - apk add --no-cache bash
-    - ls -al ~/.docker/config.json
-    - cat ~/.docker/config.json
-    - bash build.sh $DOCKER_ENV_CI_PROJECT_PATH $CI_REGISTRY_USER $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - dnf install -y qemu-user-static
+    - bash build.sh "$ALPINE_VERSION" "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY" "$CI_REGISTRY_IMAGE"
+
+variables:
+  ALPINE_VERSION: "3.19"
